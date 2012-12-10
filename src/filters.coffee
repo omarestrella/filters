@@ -120,28 +120,6 @@ class filters.Filter
             rules: rules_list
         }
 
-register_listeners = () ->
-    $('.add-filter').click () ->
-        tmpl = Handlebars.compile $(this).data('template-id')
-
-        Event.get_events('url', (data, status, xhr) ->
-            context =
-                'events': data.events
-            html = tmpl.context(context)
-        )
-
-
-$(document).ready () ->
-    register_listeners()
-
-
-
-
-
-
-
-
-
 
 
 
