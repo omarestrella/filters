@@ -1,0 +1,7 @@
+# Mac stuff
+.DS_Store
+
+# Sublime artifacts
+*.sublime-project
+*.sublime-workspace
+src/style.css

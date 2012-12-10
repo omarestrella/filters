@@ -1,0 +1,17 @@
+fs     = require 'fs'
+{exec} = require 'child_process'
+util   = require 'util'
+
+task 'sbuild', 'Build the source files', ->
+    compile()
+
+compile = (cb) ->
+    exec 'coffee -o ../build/ -c .', (err, stdout, stderr) ->
+        throw err if err
+        console.log 'Compiled coffee files'
+        cb?()
+    exec 'lessc style.less ../build/style.css', (err, stdout, stderr) ->
+        throw err if err
+        console.log 'Compiled less file'
+        cb?()
+
