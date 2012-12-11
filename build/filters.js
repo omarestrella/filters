@@ -11,7 +11,7 @@
       operation: '=='
     },
     doesnotequal: {
-      short_code: 'dneq',
+      short_code: 'ne',
       display: 'does not equal',
       operation: '!='
     },
@@ -34,26 +34,6 @@
       short_code: 'lte',
       display: 'less than equal to',
       operation: '<='
-    },
-    contains: {
-      short_code: 'c',
-      display: 'contains',
-      operation: ''
-    },
-    doesnotcontain: {
-      short_code: 'dnc',
-      display: 'does not contain',
-      operation: ''
-    },
-    startswith: {
-      short_code: 'sw',
-      display: 'starts with',
-      operation: ''
-    },
-    endswith: {
-      short_code: 'ew',
-      display: 'ends with',
-      operation: ''
     }
   };
 
@@ -90,9 +70,7 @@
 
   filters.Rule = (function() {
 
-    function Rule(event, event_name, field_name, value, operation) {
-      this.event = event;
-      this.event_name = event_name;
+    function Rule(field_name, value, operation) {
       this.field_name = field_name;
       this.value = value;
       if (typeof operation === 'string') {
@@ -108,7 +86,6 @@
 
     Rule.prototype.to_json = function() {
       return {
-        event_name: this.event_name,
         field: this.field,
         operation: this.operation,
         value: this.value
@@ -121,8 +98,10 @@
 
   filters.Filter = (function() {
 
-    function Filter(operator) {
+    function Filter(operator, event, event_name) {
       this.operator = operator;
+      this.event = event;
+      this.event_name = event_name;
       this.rules = {};
     }
 
@@ -138,8 +117,8 @@
               Format of the rules json that should be accepted by the server
               {
                   "operator": "and|or",
+                  "event_name": String,
                   "rules": [
-                          "event_name": String,
                           "field": String,
                           "operation": Object,
                           "value": String|Number
@@ -160,6 +139,7 @@
       }
       return {
         operator: this.operator,
+        event_name: this.event_name,
         rules: rules_list
       };
     };

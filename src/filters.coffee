@@ -7,7 +7,7 @@ OPERATIONS =
         display: 'equals'
         operation: '=='
     doesnotequal:
-        short_code: 'dneq'
+        short_code: 'ne'
         display: 'does not equal'
         operation: '!='
     greaterthan:
@@ -26,22 +26,6 @@ OPERATIONS =
         short_code: 'lte'
         display: 'less than equal to'
         operation: '<='
-    contains:
-        short_code: 'c'
-        display: 'contains'
-        operation: ''
-    doesnotcontain:
-        short_code: 'dnc'
-        display: 'does not contain'
-        operation: ''
-    startswith:
-        short_code: 'sw'
-        display: 'starts with'
-        operation: ''
-    endswith:
-        short_code: 'ew'
-        display: 'ends with'
-        operation: ''
 
 
 # Represents a system event
@@ -67,7 +51,7 @@ class filters.Event
 
 # Represents a single rule
 class filters.Rule
-    constructor: (@event, @event_name, @field_name, @value, operation) ->
+    constructor: (@field_name, @value, operation) ->
         if typeof operation == 'string'
             if OPERATIONS.hasOwnProperty(operation)
                 @operation = OPERATIONS[operation]
@@ -78,7 +62,6 @@ class filters.Rule
 
     to_json: () ->
         return {
-            event_name: @event_name
             field: @field
             operation: @operation
             value: @value
@@ -87,7 +70,7 @@ class filters.Rule
 
 # A filter is made up of an operator and multiple rules
 class filters.Filter
-    constructor: (@operator) ->
+    constructor: (@operator, @event, @event_name) ->
         @rules = {}
 
     add_expression: (expr) ->
@@ -101,8 +84,8 @@ class filters.Filter
         Format of the rules json that should be accepted by the server
         {
             "operator": "and|or",
+            "event_name": String,
             "rules": [
-                    "event_name": String,
                     "field": String,
                     "operation": Object,
                     "value": String|Number
@@ -117,6 +100,7 @@ class filters.Filter
 
         return {
             operator: @operator,
+            event_name: @event_name,
             rules: rules_list
         }
 
